@@ -1,0 +1,8 @@
+{
+  "env": "production",
+  "port": 8888,
+  "baseUrl": "",
+  "mongoUrl": "",
+  "redisUrl": "",
+  "jwtSecret": ""
+}

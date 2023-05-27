@@ -1,0 +1,21 @@
+import { Document, Model } from 'mongoose'
+import { UserTypes } from '../../constants'
+
+export interface UserAttributes {
+  publicId: string
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  role: keyof typeof UserTypes
+}
+
+export interface UserDoc extends UserAttributes, Document {
+  _id: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface UserModel extends Model<UserDoc> {
+  addOne(input: UserAttributes): UserDoc
+}

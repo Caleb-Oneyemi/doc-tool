@@ -1,0 +1,8 @@
+{
+  "env": "NODE_ENV",
+  "port": "PORT",
+  "baseUrl": "BASE_URL",
+  "mongoUrl": "MONGO_URL",
+  "redisUrl": "REDIS_URL",
+  "jwtSecret": "JWT_SECRET"
+}
