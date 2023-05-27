@@ -1,4 +1,7 @@
+import config from 'config'
 import * as DAL from '../data/user'
+import { mailClient } from '../../mailClient'
+
 import {
   AuthenticationError,
   CreateUserInput,
@@ -6,8 +9,11 @@ import {
   generateToken,
   hashPassword,
   isPasswordValid,
+  logger,
   UserAttributes,
 } from '../../common'
+
+const url = config.get<string>('baseUrl')
 
 export const createUser = async (input: CreateUserInput) => {
   const [hash, publicId] = await Promise.all([
@@ -15,9 +21,26 @@ export const createUser = async (input: CreateUserInput) => {
     generatePublicId(),
   ])
 
-  const data = { ...input, password: hash, publicId }
+  const result = await DAL.createUser({ ...input, password: hash, publicId })
+  const mailToken = generateToken(result)
 
-  return DAL.createUser(data)
+  mailClient
+    .sendMail({
+      title: 'Email Confirmation',
+      to: input.email,
+      subject: 'Verify Your Email',
+      greetingText: `Hi ${input.firstName}, Welcome to Doc tool`,
+      body: 'Tap the button below to verify your email address',
+      buttonText: 'Verify',
+      url: `${url}/verify/${mailToken}`,
+    })
+    .catch((err) => {
+      logger.warn(
+        `Error sending registration mail for user with publicId ${publicId} --- ${err}`,
+      )
+    })
+
+  return result
 }
 
 export const loginUser = async ({
@@ -34,13 +57,7 @@ export const loginUser = async ({
     throw new AuthenticationError('invalid credentials')
   }
 
-  const token = generateToken({
-    publicId: existingUser.publicId,
-    firstName: existingUser.firstName,
-    lastName: existingUser.lastName,
-    email: existingUser.email,
-    role: existingUser.role,
-  })
+  const token = generateToken(existingUser)
 
   return { user: existingUser, token }
 }

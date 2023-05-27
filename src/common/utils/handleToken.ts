@@ -4,7 +4,21 @@ import { RequestUser } from '../types'
 
 const secret = config.get<string>('jwtSecret')
 
-export const generateToken = (user: RequestUser): string => {
+export const generateToken = ({
+  publicId,
+  firstName,
+  lastName,
+  email,
+  role,
+}: RequestUser): string => {
+  const user = {
+    publicId,
+    firstName,
+    lastName,
+    email,
+    role,
+  }
+
   return jwt.sign(user, secret, {
     expiresIn: '7d',
   })

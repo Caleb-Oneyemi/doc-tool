@@ -4,5 +4,9 @@
   "baseUrl": "",
   "mongoUrl": "",
   "redisUrl": "",
-  "jwtSecret": ""
+  "jwtSecret": "",
+  "sendgrid": {
+    "apiKey": "",
+    "sender": ""
+  }
 }
