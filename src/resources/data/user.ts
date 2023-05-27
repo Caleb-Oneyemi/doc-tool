@@ -12,3 +12,14 @@ export const getUserByPublicId = async (publicId: string) => {
 export const getUserByEmail = async (email: string) => {
   return User.findOne({ email })
 }
+
+export const updateUser = async (
+  publicId: string,
+  input: Partial<UserAttributes>,
+) => {
+  return User.findOneAndUpdate(
+    { publicId },
+    { $set: input },
+    { new: true },
+  ).exec()
+}

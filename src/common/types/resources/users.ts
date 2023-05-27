@@ -7,6 +7,7 @@ export interface UserAttributes {
   lastName: string
   email: string
   password: string
+  isConfirmed?: boolean
   role: keyof typeof UserTypes
 }
 

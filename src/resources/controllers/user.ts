@@ -21,3 +21,9 @@ export const loginUser = async ({
   await loginSchema.parseAsync(input)
   return UserService.loginUser(input)
 }
+
+export const verifyAccount = async ({
+  params,
+}: ControllerInput<LoginSchemaType, { token: string }>) => {
+  return UserService.verifyAccount(params.token)
+}

@@ -30,6 +30,10 @@ const userSchema = new Schema<UserAttributes>(
       required: true,
       trim: true,
     },
+    isConfirmed: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
