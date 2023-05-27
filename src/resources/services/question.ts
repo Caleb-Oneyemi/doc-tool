@@ -1,12 +1,17 @@
-import { AuthorizationError, NotFoundError } from '../../common'
+import config from 'config'
 import * as DAL from '../data/question'
+import * as UserDAL from '../data/user'
+import * as ResponseDAL from '../data/response'
+import { mailClient } from '../../mailClient'
 import { QuestionAttributes, QuestionField } from '../models/types'
+import { AuthorizationError, NotFoundError, UserTypes } from '../../common'
 
 type FieldInput = Array<Omit<QuestionField, 'options'> & { options?: string[] }>
 
 type QuestionInput = Omit<QuestionAttributes, 'fields'> & {
   fields: FieldInput
 }
+const url = config.get<string>('baseUrl')
 
 const formatFields = (arr: FieldInput) => {
   const indexMap: { [key: number]: 'A' | 'B' | 'C' | 'D' | 'E' } = {
@@ -55,4 +60,50 @@ export const updateQuestion = async (
   }
 
   return DAL.updateQuestion(id, input as QuestionAttributes)
+}
+
+export const sendQuestionToPatient = async ({
+  questionId,
+  patientId,
+  userId,
+}: {
+  questionId: string
+  patientId: string
+  userId: string
+}) => {
+  const question = await DAL.getQuestionById(questionId)
+  if (!question) {
+    throw new NotFoundError('question record does not exist')
+  }
+
+  if (question.owner.toString() !== userId) {
+    throw new AuthorizationError('permission denied')
+  }
+
+  const patient = await UserDAL.getUserByIdAndRole(patientId, UserTypes.PATIENT)
+  if (!patient) {
+    throw new NotFoundError('patient record does not exist')
+  }
+
+  await mailClient.sendMail({
+    title: 'Notification',
+    to: patient.email,
+    subject: 'DocTool Notification',
+    greetingText: `Hi ${patient.firstName}, your doctor has some questions for you`,
+    body: 'Tap the button below to view questions',
+    buttonText: 'View',
+    url: `${url}/api/questions/${questionId}`,
+  })
+
+  const hourDifference = question.sendReminderAfter * 60 * 60 * 1000
+  const currentDate = new Date()
+  const dueDate = new Date(currentDate.getTime() + hourDifference)
+
+  await ResponseDAL.createResponse({
+    owner: patient.id,
+    question: question.id,
+    due: dueDate,
+  })
+
+  return { message: 'question sent to patient' }
 }

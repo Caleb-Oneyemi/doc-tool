@@ -27,3 +27,14 @@ export const updateQuestion = async ({
   await updateQuestionSchema.parseAsync(input)
   return QuestionService.updateQuestion(params.id, user?.id || '', input)
 }
+
+export const sendQuestionToPatient = async ({
+  params,
+  user,
+}: ControllerInput<{}, { id: string; patientId: string }>) => {
+  return QuestionService.sendQuestionToPatient({
+    questionId: params.id,
+    patientId: params.patientId,
+    userId: user?.id || '',
+  })
+}

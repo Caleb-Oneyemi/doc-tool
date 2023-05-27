@@ -26,4 +26,10 @@ router.patch(
   wrapCtrl(OK, QuestionCtrl.updateQuestion),
 )
 
+router.post(
+  '/questions/:id/send/:patientId',
+  auth(['ADMIN']),
+  wrapCtrl(OK, QuestionCtrl.sendQuestionToPatient),
+)
+
 export { router as ApiRouter }
