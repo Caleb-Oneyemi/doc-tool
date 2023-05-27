@@ -25,3 +25,15 @@ export const createQuestionSchema = z
   .strict()
 
 export type CreateQuestionSchemaType = z.infer<typeof createQuestionSchema>
+
+export const updateQuestionSchema = createQuestionSchema.partial().refine(
+  (input) => {
+    if (Object.keys(input).length === 0) return false
+    return true
+  },
+  {
+    message: 'update must contain at least one property',
+  },
+)
+
+export type UpdateQuestionSchemaType = z.infer<typeof updateQuestionSchema>

@@ -20,4 +20,10 @@ router.post(
   wrapCtrl(OK, QuestionCtrl.createQuestion),
 )
 
+router.patch(
+  '/questions/:id',
+  auth(['ADMIN']),
+  wrapCtrl(OK, QuestionCtrl.updateQuestion),
+)
+
 export { router as ApiRouter }
