@@ -33,6 +33,7 @@ export const auth = (allowedRole: Array<keyof typeof UserTypes>) => {
     }
 
     req.user = {
+      id: user.id,
       publicId: user.publicId,
       firstName: user.firstName,
       lastName: user.lastName,

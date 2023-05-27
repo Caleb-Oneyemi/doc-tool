@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { UserAttributes, UserDoc, UserModel } from '../../common'
+import { UserAttributes, UserDoc, UserModel, UserTypes } from '../../common'
 
 const userSchema = new Schema<UserAttributes>(
   {
@@ -24,6 +24,11 @@ const userSchema = new Schema<UserAttributes>(
       required: true,
       unique: true,
       trim: true,
+    },
+    role: {
+      type: String,
+      required: true,
+      enum: [...Object.keys(UserTypes)],
     },
     password: {
       type: String,

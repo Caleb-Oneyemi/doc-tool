@@ -5,6 +5,7 @@ import { RequestUser } from '../types'
 const secret = config.get<string>('jwtSecret')
 
 export const generateToken = ({
+  id,
   publicId,
   firstName,
   lastName,
@@ -12,6 +13,7 @@ export const generateToken = ({
   role,
 }: RequestUser): string => {
   const user = {
+    id,
     publicId,
     firstName,
     lastName,

@@ -12,7 +12,7 @@ export interface UserAttributes {
 }
 
 export interface UserDoc extends UserAttributes, Document {
-  _id: string
+  id: string
   createdAt: Date
   updatedAt: Date
 }
