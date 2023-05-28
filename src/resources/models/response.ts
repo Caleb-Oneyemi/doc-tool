@@ -6,22 +6,8 @@ import {
   ResponseDoc,
   ResponseModel,
   ResponseFields,
-  FieldOption,
   CreateResponseInput,
 } from './types'
-
-const optionsSchema = new Schema<FieldOption>(
-  {
-    A: String,
-    B: String,
-    C: String,
-    D: String,
-    E: String,
-  },
-  {
-    _id: false,
-  },
-)
 
 const fieldSchema = new Schema<ResponseFields>(
   {
@@ -31,7 +17,7 @@ const fieldSchema = new Schema<ResponseFields>(
       lowercase: true,
     },
     options: {
-      type: [optionsSchema],
+      type: [String],
     },
   },
   {

@@ -3,6 +3,7 @@ import { CREATED, OK } from 'http-status'
 
 import * as UserCtrl from './controllers/user'
 import * as QuestionCtrl from './controllers/question'
+import * as ResponseCtrl from './controllers/response'
 
 import { auth, rateLimiter, wrapCtrl } from '../common'
 
@@ -40,6 +41,20 @@ router.get(
   '/questions/:id',
   auth(['ADMIN', 'PATIENT', 'STAFF']),
   wrapCtrl(OK, QuestionCtrl.getQuestionById),
+)
+
+//RESPONSE
+
+router.patch(
+  '/responses/:id/send',
+  auth(['PATIENT']),
+  wrapCtrl(OK, ResponseCtrl.sendResponse),
+)
+
+router.get(
+  '/responses/:id',
+  auth(['ADMIN', 'STAFF']),
+  wrapCtrl(OK, ResponseCtrl.getResponse),
 )
 
 export { router as ApiRouter }

@@ -36,7 +36,7 @@ export type ResponseFields =
   | {
       text?: string
     }
-  | { options?: Array<FieldOption> }
+  | { options?: string[] }
 
 export interface ResponseAttributes {
   question: string | QuestionAttributes
