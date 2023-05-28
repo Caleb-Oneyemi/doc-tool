@@ -101,5 +101,14 @@ export const sendResponse = async (
 }
 
 export const getResponse = async (id: string) => {
-  return DAL.getResponseById(id)
+  const response = await DAL.getResponseById(id)
+  if (!response) {
+    throw new BadRequestError('response record does not exist')
+  }
+
+  const question = response.question
+  //@ts-expect-error: allow
+  response.question = undefined
+
+  return { response, question }
 }
