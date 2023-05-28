@@ -54,4 +54,4 @@ const remindPatients = async () => {
   logger.info('[Remind Patients Job] Completed....')
 }
 
-export const job = new CronJob('*/1 * * * *', remindPatients)
+export const job = new CronJob('0 * * * *', remindPatients)
