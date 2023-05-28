@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { StatusTypes } from '../../common'
 
 const fieldSchema = z.union([
   z
@@ -20,3 +21,16 @@ export const sendResponseSchema = z
   .strict()
 
 export type SendResponseSchemaType = z.infer<typeof sendResponseSchema>
+
+export const querySchema = z
+  .object({
+    page: z.coerce.number().positive(),
+    limit: z.coerce.number().positive(),
+    sort: z.enum(['asc', 'desc']),
+    status: z.enum([StatusTypes.COMPLETED, StatusTypes.PENDING]),
+    owner: z.string(),
+  })
+  .strict()
+  .partial()
+
+export type QuerySchemaType = z.infer<typeof querySchema>

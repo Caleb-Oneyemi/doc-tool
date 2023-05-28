@@ -57,4 +57,10 @@ router.get(
   wrapCtrl(OK, ResponseCtrl.getResponse),
 )
 
+router.get(
+  '/responses',
+  auth(['ADMIN', 'STAFF']),
+  wrapCtrl(OK, ResponseCtrl.getResponses),
+)
+
 export { router as ApiRouter }

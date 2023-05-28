@@ -1,3 +1,4 @@
+import { QueryInput } from '../../common'
 import { Response } from '../models/response'
 import { CreateResponseInput, ResponseAttributes } from '../models/types'
 
@@ -12,8 +13,33 @@ export const getResponseById = async (id: string) => {
   })
 }
 
-export const getResponses = async () => {
-  return Response.find({})
+export const getResponses = async ({
+  page = 1,
+  limit = 10,
+  sort = 'desc',
+  owner,
+  status,
+}: QueryInput) => {
+  const filter = owner ? { owner } : {}
+  if (status) {
+    Object.assign(filter, { status })
+  }
+  return Response.find(filter)
+    .sort({ createdAt: sort })
+    .limit(limit)
+    .skip((page - 1) * limit)
+    .populate({
+      path: 'question',
+      select: 'fields -_id',
+    })
+}
+
+export const getResponseCount = async (owner?: string, status?: string) => {
+  const filter = owner ? { owner } : {}
+  if (status) {
+    Object.assign(filter, { status })
+  }
+  return Response.countDocuments(filter).exec()
 }
 
 export const getResponseByIdAndOwnerId = async (id: string, userId: string) => {

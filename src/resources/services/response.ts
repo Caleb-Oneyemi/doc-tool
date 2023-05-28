@@ -3,7 +3,12 @@ import * as DAL from '../data/response'
 import * as UserDAL from '../data/user'
 import { QuestionAttributes } from '../models/types'
 import { mailClient } from '../../mailClient'
-import { BadRequestError, NotFoundError, StatusTypes } from '../../common'
+import {
+  BadRequestError,
+  NotFoundError,
+  QueryInput,
+  StatusTypes,
+} from '../../common'
 
 const url = config.get<string>('baseUrl')
 
@@ -111,4 +116,37 @@ export const getResponse = async (id: string) => {
   response.question = undefined
 
   return { response, question }
+}
+
+export const getResponses = async ({
+  page = 1,
+  limit = 10,
+  sort = 'desc',
+  owner,
+  status,
+}: QueryInput) => {
+  const query = { page: +page, limit: +limit, sort }
+
+  if (owner) {
+    Object.assign(query, { owner })
+  }
+
+  if (status) {
+    Object.assign(query, { status })
+  }
+
+  const [count, responses] = await Promise.all([
+    DAL.getResponseCount(owner, status),
+    DAL.getResponses(query),
+  ])
+  const totalPages = Math.ceil(count / +limit)
+
+  return {
+    responses,
+    limit: +limit,
+    currentPage: +page,
+    totalPages,
+    recordsInPage: responses.length,
+    totalRecords: count,
+  }
 }

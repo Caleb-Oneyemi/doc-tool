@@ -1,4 +1,9 @@
-import { sendResponseSchema, SendResponseSchemaType } from '../schemas/response'
+import {
+  sendResponseSchema,
+  SendResponseSchemaType,
+  querySchema,
+  QuerySchemaType,
+} from '../schemas/response'
 
 import * as ResponseService from '../services/response'
 import { ControllerInput } from '../../common'
@@ -16,4 +21,11 @@ export const getResponse = async ({
   params,
 }: ControllerInput<{}, { id: string }>) => {
   return ResponseService.getResponse(params.id)
+}
+
+export const getResponses = async ({
+  query,
+}: ControllerInput<{}, {}, QuerySchemaType>) => {
+  await querySchema.parseAsync(query)
+  return ResponseService.getResponses(query)
 }
