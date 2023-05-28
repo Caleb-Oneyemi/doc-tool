@@ -6,7 +6,6 @@ const secret = config.get<string>('jwtSecret')
 
 export const generateToken = ({
   id,
-  publicId,
   firstName,
   lastName,
   email,
@@ -14,7 +13,6 @@ export const generateToken = ({
 }: RequestUser): string => {
   const user = {
     id,
-    publicId,
     firstName,
     lastName,
     email,

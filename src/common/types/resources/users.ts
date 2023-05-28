@@ -2,7 +2,6 @@ import { Document, Model } from 'mongoose'
 import { UserTypes } from '../../constants'
 
 export interface UserAttributes {
-  publicId: string
   firstName: string
   lastName: string
   email: string

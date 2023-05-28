@@ -3,12 +3,6 @@ import { UserAttributes, UserDoc, UserModel, UserTypes } from '../../common'
 
 const userSchema = new Schema<UserAttributes>(
   {
-    publicId: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-    },
     firstName: {
       type: String,
       required: true,

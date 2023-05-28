@@ -7,7 +7,6 @@ import {
   AuthenticationError,
   BadRequestError,
   CreateUserInput,
-  generatePublicId,
   generateToken,
   hashPassword,
   isPasswordValid,
@@ -19,12 +18,8 @@ import {
 const url = config.get<string>('baseUrl')
 
 export const createUser = async (input: CreateUserInput) => {
-  const [hash, publicId] = await Promise.all([
-    hashPassword(input.password),
-    generatePublicId(),
-  ])
-
-  const result = await DAL.createUser({ ...input, password: hash, publicId })
+  const hash = await hashPassword(input.password)
+  const result = await DAL.createUser({ ...input, password: hash })
   const mailToken = generateToken(result)
 
   mailClient
@@ -39,7 +34,7 @@ export const createUser = async (input: CreateUserInput) => {
     })
     .catch((err) => {
       logger.warn(
-        `Error sending registration mail for user with publicId ${publicId} --- ${err}`,
+        `Error sending registration mail for user with id ${result.id} --- ${err}`,
       )
     })
 
@@ -66,11 +61,11 @@ export const loginUser = async ({
 }
 
 export const verifyAccount = async (token: string) => {
-  let publicId
+  let id
 
   try {
     const res = validateToken(token)
-    publicId = res.publicId
+    id = res.id
   } catch (err) {
     if (err instanceof TokenExpiredError) {
       throw new BadRequestError('token expired')
@@ -79,9 +74,9 @@ export const verifyAccount = async (token: string) => {
     throw new BadRequestError('invalid token')
   }
 
-  const user = await DAL.updateUser(publicId, { isConfirmed: true })
+  const user = await DAL.updateUser(id, { isConfirmed: true })
   if (!user) {
-    throw new Error(`failed to verify account for user with id ${publicId}`)
+    throw new Error(`failed to verify account for user with id ${id}`)
   }
 
   return { message: 'account verified successfully' }

@@ -1,10 +1,3 @@
-import { nanoid } from 'nanoid/async'
-
-export const generatePublicId = async (size?: number) => {
-  if (!size) return nanoid()
-  return nanoid(size)
-}
-
 export const formatValidationErrorMessage = (msg: string, field: string) => {
   let result = msg
 
