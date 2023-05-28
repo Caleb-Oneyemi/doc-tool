@@ -107,3 +107,11 @@ export const sendQuestionToPatient = async ({
 
   return { message: 'question sent to patient' }
 }
+
+export const getQuestionById = async (id: string) => {
+  const question = await DAL.getQuestionById(id, true)
+  if (!question) {
+    throw new NotFoundError('question record does not exist')
+  }
+  return question
+}

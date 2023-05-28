@@ -38,3 +38,9 @@ export const sendQuestionToPatient = async ({
     userId: user?.id || '',
   })
 }
+
+export const getQuestionById = async ({
+  params,
+}: ControllerInput<{}, { id: string }>) => {
+  return QuestionService.getQuestionById(params.id)
+}
