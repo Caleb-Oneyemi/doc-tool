@@ -28,6 +28,7 @@ const fieldSchema = new Schema<ResponseFields>(
     text: {
       type: String,
       required: true,
+      lowercase: true,
     },
     options: {
       type: [optionsSchema],

@@ -27,6 +27,7 @@ const fieldSchema = new Schema<QuestionField>(
     text: {
       type: String,
       required: true,
+      lowercase: true,
     },
     type: {
       type: String,
@@ -48,6 +49,7 @@ const questionSchema = new Schema<QuestionAttributes>(
       type: String,
       required: true,
       trim: true,
+      lowercase: true,
     },
     owner: {
       type: Schema.Types.ObjectId,

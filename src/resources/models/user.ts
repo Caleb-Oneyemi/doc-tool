@@ -13,17 +13,20 @@ const userSchema = new Schema<UserAttributes>(
       type: String,
       required: true,
       trim: true,
+      lowercase: true,
     },
     lastName: {
       type: String,
       required: true,
       trim: true,
+      lowercase: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
       trim: true,
+      lowercase: true,
     },
     role: {
       type: String,
