@@ -10,6 +10,7 @@ const remindPatients = async () => {
   logger.info('[Remind Patients Job] Starting....')
 
   let store = []
+  let count = 0
   const oneHourAgo = new Date(new Date().getTime() - 60 * 60 * 1000)
   const pendingDueResponses = Response.find({
     due: { $gte: oneHourAgo, $lte: new Date() },
@@ -22,7 +23,6 @@ const remindPatients = async () => {
     .cursor()
 
   for await (const response of pendingDueResponses) {
-    console.log('res', response)
     const patient = response.owner as Pick<
       UserAttributes,
       'email' | 'firstName'
@@ -44,6 +44,8 @@ const remindPatients = async () => {
       await Promise.allSettled(store)
       store = []
     }
+
+    count++
   }
 
   if (store.length > 0) {
@@ -51,7 +53,7 @@ const remindPatients = async () => {
     store = []
   }
 
-  logger.info('[Remind Patients Job] Completed....')
+  logger.info(`[Remind Patients Job] Completed. ${count} records processed...`)
 }
 
 export const job = new CronJob('0 * * * *', remindPatients)
