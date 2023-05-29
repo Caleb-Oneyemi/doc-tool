@@ -22,7 +22,7 @@ router.get('/users/verify/:token', wrapCtrl(OK, UserCtrl.verifyAccount))
 router.post(
   '/questions',
   auth(['ADMIN']),
-  wrapCtrl(OK, QuestionCtrl.createQuestion),
+  wrapCtrl(CREATED, QuestionCtrl.createQuestion),
 )
 
 router.patch(
