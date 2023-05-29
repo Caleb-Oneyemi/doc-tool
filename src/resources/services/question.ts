@@ -85,16 +85,6 @@ export const sendQuestionToPatient = async ({
     throw new NotFoundError('patient record does not exist')
   }
 
-  await mailClient.sendMail({
-    title: 'Notification',
-    to: patient.email,
-    subject: 'DocTool Notification',
-    greetingText: `Hi ${patient.firstName}, your doctor has some questions for you`,
-    body: 'Tap the button below to view questions',
-    buttonText: 'View',
-    url: `${url}/api/questions/${questionId}`,
-  })
-
   const hourDifference = question.sendReminderAfter * 60 * 60 * 1000
   const currentDate = new Date()
   const dueDate = new Date(currentDate.getTime() + hourDifference)
@@ -103,6 +93,16 @@ export const sendQuestionToPatient = async ({
     owner: patient.id,
     question: question.id,
     due: dueDate,
+  })
+
+  await mailClient.sendMail({
+    title: 'Notification',
+    to: patient.email,
+    subject: 'DocTool Notification',
+    greetingText: `Hi ${patient.firstName}, your doctor has some questions for you`,
+    body: 'Tap the button below to view questions',
+    buttonText: 'View',
+    url: `${url}/api/questions/${questionId}`,
   })
 
   return { message: 'question sent to patient' }
