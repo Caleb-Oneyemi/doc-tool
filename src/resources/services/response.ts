@@ -22,7 +22,7 @@ export const sendResponse = async (
   userId: string,
   fields: Array<SendResponseInput>,
 ) => {
-  const pendingResponse = await DAL.getResponseByIdAndOwnerId(id, userId)
+  const pendingResponse = await DAL.getPendingResponseByIdAndOwnerId(id, userId)
   if (!pendingResponse) {
     throw new NotFoundError('pending response record not found')
   }

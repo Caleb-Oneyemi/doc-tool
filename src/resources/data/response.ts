@@ -1,4 +1,4 @@
-import { QueryInput } from '../../common'
+import { QueryInput, StatusTypes } from '../../common'
 import { Response } from '../models/response'
 import { CreateResponseInput, ResponseAttributes } from '../models/types'
 
@@ -42,8 +42,15 @@ export const getResponseCount = async (owner?: string, status?: string) => {
   return Response.countDocuments(filter).exec()
 }
 
-export const getResponseByIdAndOwnerId = async (id: string, userId: string) => {
-  return Response.findOne({ _id: id, owner: userId }).populate({
+export const getPendingResponseByIdAndOwnerId = async (
+  id: string,
+  userId: string,
+) => {
+  return Response.findOne({
+    _id: id,
+    owner: userId,
+    status: StatusTypes.PENDING,
+  }).populate({
     path: 'question',
     select: 'fields owner -_id',
   })
